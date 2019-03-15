@@ -22,6 +22,6 @@ It relies on pigz so rock on over to 'https://zlib.net/pigz/' and
 install a copy.
 }
 \examples{
-Unzip()
+\dontrun{Unzip()}
 
 }

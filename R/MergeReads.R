@@ -11,8 +11,6 @@
 #'
 #'@return None
 #'
-#'@examples \donttest{FastqCount(sample)}
-#'@examples \donttest{sapply(manyfiles,FastqCount)}
 #'
 #'@export
 

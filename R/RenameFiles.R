@@ -4,7 +4,6 @@
 #'
 #'@return None
 #'
-#'@examples Folders()
 #'
 #'@export
 

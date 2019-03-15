@@ -25,7 +25,7 @@ None
 This function uses usearch to merge paired end Illumina amplicon data.
 }
 \examples{
-FastqCount(sample)
-sapply(manyfiles,FastqCount)
+\donttest{FastqCount(sample)}
+\donttest{sapply(manyfiles,FastqCount)}
 
 }

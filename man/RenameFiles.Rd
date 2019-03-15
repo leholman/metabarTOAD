@@ -14,6 +14,6 @@ None
 This function renames .fq files according to a user supplied index.
 }
 \examples{
-Folders()
+\dontrun{Folders()}
 
 }

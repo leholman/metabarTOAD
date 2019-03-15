@@ -16,7 +16,7 @@ The number of reads in the fastq file
 This function counts the number of reads in a fastq file. It handles one file at a time.
 }
 \examples{
-FastqCount(sample)
-sapply(manyfiles,FastqCount)
+\dontrun{FastqCount(sample)}
+\dontrun{sapply(manyfiles,FastqCount)}
 
 }

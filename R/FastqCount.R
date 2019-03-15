@@ -6,8 +6,8 @@
 #'
 #'@return The number of reads in the fastq file
 #'
-#'@examples \donttest{FastqCount(sample)}
-#'@examples \donttest{sapply(manyfiles,FastqCount)}
+#'@examples \dontrun{FastqCount(sample)}
+#'@examples \dontrun{sapply(manyfiles,FastqCount)}
 #'
 #'@export
 
