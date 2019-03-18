@@ -44,6 +44,8 @@ MergeReads(usearchdest = "/Users/Luke/Bioinformatics/PATH/usearch")
 #Lets count the merged reads
 sapply(list.files("2.mergedreads",pattern=".fastq",full.names = TRUE),FastqCount)
 
+#Great now we can stirp the primers off and length truncate
+
 
 
 
