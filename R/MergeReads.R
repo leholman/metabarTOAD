@@ -5,7 +5,7 @@
 #'@param maxdiffs Maximum number of allowed mismatches in the alignment between reads. Increase with greater overlap of forward and reverse sequences.
 #'@param pctID Minimum percent identity of alignment between forward and reverse read. Decrease with greater overlap of forward and reverse sequences.
 #'@param folderwfiles A path specifying folder containing reads to pair. Default is 1.rawreads.
-#'@param folderoutpu A path specifying output folder to write merged reads into. Default is 2.mergedreads.
+#'@param folderoutput A path specifying output folder to write merged reads into. Default is 2.mergedreads.
 #'@param usearchdest Specify the location of the usearch executable if PATH not configured appropriately.
 #'
 #'

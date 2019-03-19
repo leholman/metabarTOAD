@@ -2,6 +2,12 @@
 #'
 #'This function renames .fq files according to a user supplied index.
 #'
+#'
+#'@param SeqIDs A vector containing the filenames of the files to be renamed.
+#'@param DesiredIDs A vector containing the desired names of the files to be renamed, in the same order as SeqIDs
+#'@param folderwfiles A directory containign the files to be renamed, if not default directory.
+#'@param usemetadatafile TRUE or FALSE, should the names in the metadata csv be used?
+#'
 #'@return None
 #'
 #'

@@ -10,22 +10,17 @@ MergeReads(maxdiffs = 15, pctID = 80, folderwfiles = "1.rawreads",
 \arguments{
 \item{maxdiffs}{Maximum number of allowed mismatches in the alignment between reads. Increase with greater overlap of forward and reverse sequences.}
 
-\item{pctID}{Minimum % identity of alignment between forward and reverse read. Decrease with greater overlap of forward and reverse sequences.}
+\item{pctID}{Minimum percent identity of alignment between forward and reverse read. Decrease with greater overlap of forward and reverse sequences.}
 
 \item{folderwfiles}{A path specifying folder containing reads to pair. Default is 1.rawreads.}
 
-\item{usearchdest}{Specify the location of the usearch executable if PATH not configured appropriately.}
+\item{folderoutput}{A path specifying output folder to write merged reads into. Default is 2.mergedreads.}
 
-\item{folderoutpu}{A path specifying output folder to write merged reads into. Default is 2.mergedreads.}
+\item{usearchdest}{Specify the location of the usearch executable if PATH not configured appropriately.}
 }
 \value{
 None
 }
 \description{
 This function uses usearch to merge paired end Illumina amplicon data.
-}
-\examples{
-\donttest{FastqCount(sample)}
-\donttest{sapply(manyfiles,FastqCount)}
-
 }

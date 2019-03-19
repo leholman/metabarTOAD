@@ -8,4 +8,5 @@ Description: These functions allow you to quickly and simply manipulate metabarc
 License: CC0
 Encoding: UTF-8
 LazyData: true
+Imports: seqinr
 RoxygenNote: 6.1.1.9000

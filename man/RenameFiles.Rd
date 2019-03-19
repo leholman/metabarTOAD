@@ -7,13 +7,18 @@
 RenameFiles(SeqIDs, DesiredIDs, folderwfiles = "1.rawreads",
   usemetadatafile = FALSE)
 }
+\arguments{
+\item{SeqIDs}{A vector containing the filenames of the files to be renamed.}
+
+\item{DesiredIDs}{A vector containing the desired names of the files to be renamed, in the same order as SeqIDs}
+
+\item{folderwfiles}{A directory containign the files to be renamed, if not default directory.}
+
+\item{usemetadatafile}{TRUE or FALSE, should the names in the metadata csv be used?}
+}
 \value{
 None
 }
 \description{
 This function renames .fq files according to a user supplied index.
-}
-\examples{
-\dontrun{Folders()}
-
 }
