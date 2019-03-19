@@ -45,6 +45,25 @@ MergeReads(usearchdest = "/Users/Luke/Bioinformatics/PATH/usearch")
 sapply(list.files("2.mergedreads",pattern=".fastq",full.names = TRUE),FastqCount)
 
 #Great now we can stirp the primers off and length truncate
+#We can either provide the primer and length truncation data if we have a single set of primers
+PrimerStrip(PrimerF = "NNNNNNGGWACWGGWTGAACWGTWTAYCCYCC",
+            PrimerR = "TAIACYTCIGGRTGICCRAARAAYCA",
+            MinLen = 303,
+            MaxLen = 323,
+            cutadaptdest = "/Users/Luke/Bioinformatics/PATH/cutadapt",
+            ncores=8)
+#or provide data for multiple primer sets and process a bunch toghether
+PrimerStrip(UsePrimerFile = TRUE,cutadaptdest = "/Users/Luke/Bioinformatics/PATH/cutadapt",ncores=8)
+
+
+##Now we need to pool our sequences, get rid of those with errors and fiter out singletons.
+#this is done using a single function as below if we used a single primer set for this analysis
+PoolNFilterReads(vsearchdest="/Users/Luke/Bioinformatics/PATH/vsearch")
+
+#alternativly if we have a bunch of primers we can run the function like this
+PoolNFilterReads(UsePrimerFile=TRUE,vsearchdest="/Users/Luke/Bioinformatics/PATH/vsearch")
+
+
 
 
 
