@@ -3,6 +3,7 @@
 export(FastqCount)
 export(Folders)
 export(MergeReads)
+export(PoolNFilterReads)
 export(PrimerStrip)
 export(RenameFiles)
 export(Unzip)
