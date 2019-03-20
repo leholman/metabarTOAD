@@ -76,7 +76,11 @@ DenoiseUNOISE3(usearchdest = "/Users/Luke/Bioinformatics/PATH/usearch")
 #and like this if we have used the primer file.
 DenoiseUNOISE3(UsePrimerFile = TRUE,usearchdest = "/Users/Luke/Bioinformatics/PATH/usearch")
 
-
+#If we want to use LULU to curate our data we can do so as below.
+ApplyLulu(seqs="5.OTUs/AllSamples.unoise3.OTUs.fasta",
+          table="6.mappings/OTUtabs/AllSamplesraw.unoise3.csv",
+          output="8.LULU/curateduoise3table.csv",
+          vsearchdest="/Users/Luke/Bioinformatics/PATH/vsearch")
 
 
 
