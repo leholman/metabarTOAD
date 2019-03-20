@@ -27,6 +27,8 @@ Folders <- function(){
   }else{warning("7.DADA2, no need to create")}
   if(!dir.exists("8.LULU")){dir.create("8.LULU")
   }else{warning("8.LULU, no need to create")}
+  if(!dir.exists("6.mappings/OTUtabs")){dir.create("6.mappings/OTUtabs")
+  }else{warning("6.mappings/OTUtabs, no need to create")}
   message("Folders set up.")
 }
 
