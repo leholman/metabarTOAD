@@ -17,7 +17,7 @@ PoolNFilterReads(FastqMaxEE = 1, folderwfiles = "3.strippedreads",
 
 \item{UsePrimerFile}{TRUE or FALSE, is a csv file provided containing primer information?}
 
-\item{vsearchdest}{Specify the location of the usearch executable if PATH not configured appropriately.}
+\item{vsearchdest}{Specify the location of the vsearch executable if PATH not configured appropriately.}
 }
 \value{
 None

@@ -6,7 +6,7 @@
 #'@param folderwfiles Folder containing fastq files to be processed. Default is 3.strippedreads.
 #'@param folderoutput Output folder for processed reads. Default is 4.pooledsamples.
 #'@param UsePrimerFile TRUE or FALSE, is a csv file provided containing primer information?
-#'@param vsearchdest Specify the location of the usearch executable if PATH not configured appropriately.
+#'@param vsearchdest Specify the location of the vsearch executable if PATH not configured appropriately.
 #'
 #'
 #'@return None
