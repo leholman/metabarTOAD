@@ -63,8 +63,18 @@ PoolNFilterReads(vsearchdest="/Users/Luke/Bioinformatics/PATH/vsearch")
 #alternativly if we have a bunch of primers we can run the function like this
 PoolNFilterReads(UsePrimerFile=TRUE,vsearchdest="/Users/Luke/Bioinformatics/PATH/vsearch")
 
+#Now if we want to generate 97% clusters and map our reads we can use a single function as below for a single primer set
+OTUCluster(usearchdest = "/Users/Luke/Bioinformatics/PATH/usearch")
+
+#and like this if we have used the primer file.
+OTUCluster(UsePrimerFile = TRUE,usearchdest = "/Users/Luke/Bioinformatics/PATH/usearch")
 
 
+##If we prefer actual sequence variants we can generate these in the same way with the below function for a single primer set
+DenoiseUNOISE3(usearchdest = "/Users/Luke/Bioinformatics/PATH/usearch")
+
+#and like this if we have used the primer file.
+DenoiseUNOISE3(UsePrimerFile = TRUE,usearchdest = "/Users/Luke/Bioinformatics/PATH/usearch")
 
 
 
