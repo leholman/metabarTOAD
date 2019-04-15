@@ -1,4 +1,5 @@
-<img src="/images/Metabartoad.png" height="40">
+<img src="/images/Metabartoad.png" align="right" height="60">
+
 # metabarTOAD 
 
 ## Introduction
