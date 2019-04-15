@@ -1,6 +1,4 @@
 # metabarTOAD 
-
-#![/images/Metabartoad.png](/images/Metabartoad.png)
 <img src="/images/Metabartoad.png" height="40">
 
 ## Introduction
