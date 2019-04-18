@@ -29,7 +29,7 @@ PrimerStrip <- function(PrimerF=NA,
                         folderwfiles="2.mergedreads",
                         folderoutput="3.strippedreads",
                         cutadaptdest="cutadapt",
-                        ncores=1){0
+                        ncores=1){
   if(UsePrimerFile){
     if(!file.exists("metadata.csv")){stop("No metadata file found, metadata needed to link primers and samples.")}
     if(!file.exists("primers.csv")){stop("No primer data found.")}
@@ -58,7 +58,7 @@ PrimerStrip <- function(PrimerF=NA,
 
       for (loopsample in sampleindex[primerindex==primer]){
         #this argument needs work
-        cutadaptarg <- paste("-g  ",loopforward,"...",loopreverse.revcomp," -m ",loopmin," -M ",loopmax," -n 2 -j ",ncores," --discard-untrimmed -o ",folderoutput,"/",loopsample,".stripped.fastq ",folderwfiles,"/",loopsample,".merged.fastq",sep="")
+        cutadaptarg <- paste("-g  ^",loopforward,"...",loopreverse.revcomp," -m ",loopmin," -M ",loopmax," -n 2 -j ",ncores," --discard-untrimmed -o ",folderoutput,"/",loopsample,".stripped.fastq ",folderwfiles,"/",loopsample,".merged.fastq",sep="")
         system2(cutadaptdest,cutadaptarg)
       }
     }
