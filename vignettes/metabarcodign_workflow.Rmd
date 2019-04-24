@@ -1,0 +1,184 @@
+---
+title: "OTU Clustering and Denoising I"
+author: "Luke E. Holman"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    df_print: paged
+vignette: |
+  %\VignetteIndexEntry{Vignette Title} %\VignetteEngine{knitr::rmarkdown} %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = FALSE
+)
+```
+
+## Analysing metabarcoding data using metabarTOAD
+There are a great number of pipelines and methods for the analysis of metabarcoding data. No single method is appropriate or inappropriate in all situations. Methods and ideas are constantly being developed so keep an eye on the horizon and focus on fundemental and transferable skills. 
+This tutorial is for beginners and demonstrates the workflow. 
+
+### Requirements
+#### Library design
+This pipeline is designed to work with paired-end Illumina amplicon data generated from a 2-step PCR method as [Bista et al.2017](https://www.nature.com/articles/ncomms14087). We are expecting sufficient (>30bp) overlap of the paired end reads. 
+
+
+#### Software
+For this tutorial you will need the following 
+
+* Cutadapt (version 2.0+)  [link](https://cutadapt.readthedocs.io/en/stable/installation.html)
+* VSEARCH (version 2.10.4+) [link](https://github.com/torognes/vsearch)
+* USEARCH (version 11+) [link](https://drive5.com/usearch/download.html)
+
+These should be installed and working on your system. Keep a note of the directory path to the binary or have them in your PATH. Not sure about the PATH? - go [here](http://www.linfo.org/path_env_var.html)
+
+
+## Setting up 
+Make sure you start off with a clean folder in a new working directory. Check there is nothing in your directory with `dir()`. Lets start by loading up the required package(s)
+
+```{r}
+require(metabarTOAD)
+```
+
+
+Now we use the first command to set up the required folder structure. 
+
+```{r}
+Folders()
+```
+
+Great, lets check the folders. We can use `dir()` as before. We should see 8 folders with different names prefixxed with a number.
+
+Now we have a folder structure lets move our raw Illumina data into the `1.rawreads`. You might wish to copy your raw files into the `0.backup` folder as well in case you want to start the analysis again from scratch.
+
+The pipeline can be run for multiple primer sets by providing sample and primer data in the required format. Download the examples [here](). This tutorial assumes we're only working on a single set of primers but provide primer and sample data.
+
+
+## Unzipping and Counting
+First lets check our files to make sure everyhting is as we expect.
+```{r}
+list.files("1.rawreads/")
+```
+We should have pairs of gun zipped samples ready for analysis. 
+
+
+Now everything is in place we can start to analyse the data. First lets unzip all the data, and then check to make sure everyhting has been unzipped. 
+```{r}
+Unzip()
+list.files("1.rawreads/")
+```
+
+We can rename our files at this stage if we wish. First we pull the names from our metadata file.
+
+```{r}
+index <- read.csv("metadata.csv")
+```
+
+We now put the desired and current names into the epxression RenameFiles to change the names of our samples.
+
+```{r}
+RenameFiles(SeqIDs = as.character(index$RunID),DesiredIDs = as.character(index$RealID))
+```
+
+If we prefer we can perform the same operation using the metadata sheet that we have copied into the base of the working directory. 
+
+```{r}
+RenameFiles(usemetadatafile = TRUE)
+```
+
+Now we have everything named we can count the number of reads per sample. First we create a list of files to be counted.
+
+```{r}
+files <- list.files("1.rawreads",pattern=".fastq",full.names = TRUE)
+```
+
+Then we use `FastqCount` and `sapply`to count the reads for each sample. 
+
+```{r}
+rawreadcount <- sapply(files,FastqCount)
+```
+
+We can calcuate the mean and standard deviation of reads across the raw samples.
+
+```{r}
+mean(rawreadcount)
+sd(rawreadcount)
+```
+
+
+## Merging and Filtering
+
+Next we merge the forward and reverse reads as below. 
+
+```{r}
+MergeReads(usearchdest = "/path/to/usearch")
+```
+
+We can count the number of merged reads like this. 
+
+```{r}
+sapply(list.files("2.mergedreads",pattern=".fastq",full.names = TRUE),FastqCount)
+```
+
+Our sequences are now combined into a single fastq per read pair. Next we need to strip the primers from each end of the read. We do this as below. 
+
+```{r}
+PrimerStrip(PrimerF = "NNNNNNGGWACWGGWTGAACWGTWTAYCCYCC",
+            PrimerR = "TAIACYTCIGGRTGICCRAARAAYCA",
+            MinLen = 303,
+            MaxLen = 323,
+            cutadaptdest = "/cutadapt/location/here",
+            ncores=7)
+```
+
+Alternativly we can provide much of the above information in a primer file and process many primers at the same time as below.
+
+```{r}
+PrimerStrip(UsePrimerFile = TRUE,cutadaptdest = "/path/to/cutadapt", ncores=7)
+```
+
+Next we pool all our sequences together and disgard singleton sequences (sequences only found once in the data). 
+
+```{r}
+PoolNFilterReads(vsearchdest="/path/to/vsearch")
+```
+
+We can also do this with multuple primers at once as shown with the primer stripping step above. To do this use the argument `UsePrimerFile = TRUE`. 
+
+
+
+## Clustering and Denoising 
+
+Now everything is prepped and ready to go we can generate 97% OTUs using the below command. As previously we can use `UsePrimerFile=TRUE` if we are using multiple primer sets.  
+
+```{r}
+OTUCluster(usearchdest = "/path/to/useach")
+```
+
+
+We can produce denoised OTUs (sometimes called MOTUS or ASVs or ESVs) using the UNOISE3 algorithm (paper [here](https://www.biorxiv.org/node/22505.abstract)). Again use `UsePrimerFile=TRUE` in the case of multiple primers.
+
+```{r}
+DenoiseUNOISE3(usearchdest = "/path/to/useach")
+```
+
+
+When using the above two functions the OTUs will be output to the `5.OTUs` folder and the OTU by sample table to `6.mappings/OTUtabs`. These files can be used in downstream ecological analyses.  
+
+## Post Clustering Curation with LULU
+
+Very often in metabarcoding datasets we see a large number of OTUs with close percentage identity. These may correspond with intraspecfic diversity, unfiltered PCR errors or other methodological foibles. One way to deal with these is to use the LULU algorithm (paper [here](https://www.nature.com/articles/s41467-017-01312-x)). A great tutorial is provided on the GitHub [page](https://github.com/tobiasgf/lulu), but you can just use the below wrapper script if you prefer. 
+
+```{r}
+ApplyLulu(seqs="/path/to/OTUs.csv",
+          table="/path/to/OTU/by/sample/table.csv",
+          output="/path/todesired/output/table/lulu.csv",
+          vsearchdest="/path/to/vsearch")
+
+```
+
+
+
