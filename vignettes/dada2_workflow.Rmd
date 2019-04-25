@@ -1,0 +1,73 @@
+---
+title: "DADA2 Metabarcdoign Workflow"
+author: "Luke E. Holman"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+Many contempory metabarcoding workflows ignore qualty information provided by Illumnia sequencing and in doing so lose the ability to accurately determine lowe frequency sequence diversity.
+
+DADA2 is an approach (paper [here](https://benjjneb.github.io/dada2/index.html)) gaining popularity that integrates the quality information to build an model of sequence errors that allowing for very precise inference of amplicon sequences. Here, we show how DADA2 can be implimented in the metabarTOAD wrapper. 
+
+### Requirements
+#### Library design
+This tutorial is designed for paired-end Illumina amplicon data generated from a 2-step PCR method as [Bista et al.2017](https://www.nature.com/articles/ncomms14087). We are expecting sufficient (>30bp) overlap of the paired end reads. DADA2 learns and performs amplicon inference according to the error model, specific to each Illumina run so samples from different runs should be analysed seperately. This tutorial is designed to analyse data from a single primer set at a time. 
+
+
+#### Software
+For this tutorial you will need the following 
+
+* Cutadapt (version 2.0+)  [link](https://cutadapt.readthedocs.io/en/stable/installation.html)
+* DADA2 (version) [link](https://benjjneb.github.io/dada2/dada-installation.html)
+
+Cutadapt should be installed and working on your system. Keep a note of the directory path to the binary or have them in your PATH. Not sure about the PATH? - go [here](http://www.linfo.org/path_env_var.html)
+
+
+## Setting up 
+Make sure you start off with a clean folder in a new working directory. Check there is nothing in your directory with `dir()`. Lets start by loading up the required package(s)
+
+```{r}
+require(metabarTOAD)
+require(dada2)
+```
+
+If you previously used the metabarTOAD workflow to generate 97% OTUs or denoised OTUs with UNOISE3 then the correct folder structure is already in place. Otherwise use the below command to set up some folders for the analysis. 
+
+```{r}
+Folders()
+```
+
+Now we have a folder structure lets move our raw Illumina data into the `1.rawreads`. You might wish to copy your raw files into the `0.backup` folder as well in case you want to start the analysis again from scratch. 
+
+## Primer Stripping
+DADA2 requires sequences that have been stripped of primer regions. We can use the below expression to strip primers from both sets fo read pairs at the same time. This is important as many downstream applications (such as DADA2) rely on reads appearing in the same order in both the forward and reverse read files. If we strip reads from read pairs individually we may end up filtering out a single read from a read pair resulting in unmatched pairs in our files. 
+
+```{r}
+dadaReadPrep(PrimerF = "YOUR_FORWARD_PRIMER",
+             PrimerR = "YOUR_REVERSE_PRIMER",
+             cutadaptdest = "/path/to/cutadapt", 
+             ncores = 7
+)
+```
+
+The function `dadaReadPrep()` will take ambigous nucleotides (Y,M,R,N etc.) and will automatically convert inosine (I) bases to N.
+
+
+
+
+
+
+
+
+
