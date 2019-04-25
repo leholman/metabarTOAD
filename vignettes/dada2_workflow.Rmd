@@ -29,7 +29,7 @@ This tutorial is designed for paired-end Illumina amplicon data generated from a
 For this tutorial you will need the following 
 
 * Cutadapt (version 2.0+)  [link](https://cutadapt.readthedocs.io/en/stable/installation.html)
-* DADA2 (version) [link](https://benjjneb.github.io/dada2/dada-installation.html)
+* DADA2 (version 1.8+) [link](https://benjjneb.github.io/dada2/dada-installation.html)
 
 Cutadapt should be installed and working on your system. Keep a note of the directory path to the binary or have them in your PATH. Not sure about the PATH? - go [here](http://www.linfo.org/path_env_var.html)
 
@@ -40,6 +40,7 @@ Make sure you start off with a clean folder in a new working directory. Check th
 ```{r}
 require(metabarTOAD)
 require(dada2)
+
 ```
 
 If you previously used the metabarTOAD workflow to generate 97% OTUs or denoised OTUs with UNOISE3 then the correct folder structure is already in place. Otherwise use the below command to set up some folders for the analysis. 
@@ -61,13 +62,150 @@ dadaReadPrep(PrimerF = "YOUR_FORWARD_PRIMER",
 )
 ```
 
-The function `dadaReadPrep()` will take ambigous nucleotides (Y,M,R,N etc.) and will automatically convert inosine (I) bases to N.
+The function `dadaReadPrep()` will accept ambigous nucleotides in primer data (Y,M,R,N etc.) and will automatically convert inosine (I) bases to N.
+
+You should now find your stripped primers in the directory `/7.DADA2/trimmed.reads/`. Have a look and check as below. 
+
+```{r}
+list.files("/7.DADA2/trimmed.reads/")
+```
+
+You should see a list of your files. The rest of this workflow follows the usual DADA2 pipeline outlined [here](https://benjjneb.github.io/dada2/tutorial.html). 
 
 
+## Inspect Files 
+First lets get the file names of the forward and reverse reads. We assume here your files have the format `****_R1_001.fastq` and `****_R2_001.fastq` for the forward and reverse reads respectivly. 
+
+```{r}
+fnFs <- sort(list.files(path, pattern="_R1_001.fastq", full.names = TRUE))
+fnRs <- sort(list.files(path, pattern="_R2_001.fastq", full.names = TRUE))
+```
+
+We can then extract the files names as below. 
+
+```{r}
+sample.names <- sapply(strsplit(basename(fnFs), "_"), `[`, 1)
+```
+
+Now we should inspect the quality of the forward and reverse reads. 
+
+```{r}
+plotQualityProfile(fnFs[1:2])
+plotQualityProfile(fnRs[1:2])
+```
+
+INSERT GUIDANCE HERE ON READ QUALITY
 
 
+## Filtering and Error Rate Learning
+
+WHAT ARE OUR REQUIREMENTS FOR THIS STEP?
+
+Next we create objects containing the path for the output files for the next step. 
+
+```{r}
+filtFs <- file.path("7.DADA2/filtered", paste0(sample.names, "_F_filt.fastq.gz"))
+filtRs <- file.path("7.DADA2/filtered", paste0(sample.names, "_R_filt.fastq.gz"))
+```
+
+The next function filters our samples so our dataset contains only low error sequences. You should try to maintain as much of an overlap between your foward and reverse read as possible but avoid including poor qualty data. 
+
+```{r}
+out <- filterAndTrim(fnFs, filtFs, fnRs, filtRs, truncLen=c(250,180),
+                     maxN=0, maxEE=c(1,1), truncQ=2, rm.phix=TRUE,
+                    compress=TRUE, multithread=7)
+```
+
+The next step is to learn the error rate for the sequences. Remember that samples from different runs may have different error models and therefore should not be combined. 
+
+```{r}
+errF <- learnErrors(filtFs, multithread=7)
+
+errR <- learnErrors(filtRs, multithread=7)
+```
+
+Now we have built a model of the errors we can visualise it as follows. 
+
+```{r}
+plotErrors(errF, nominalQ=TRUE)
+```
+
+SOMETHING ABOUT JUDGING GOOD FIT
+
+## Dereplication and DADA2 Algorithm 
+
+DEREPLICATION TEXT HERE
+
+```{r}
+derepFs <- derepFastq(list.files("7.DADA2/filtered", pattern="F_filt.fastq.gz", full.names = TRUE), verbose=TRUE)
+derepRs <- derepFastq(list.files("7.DADA2/filtered", pattern="R_filt.fastq.gz", full.names = TRUE), verbose=TRUE)
+
+names(derepFs) <- sapply(strsplit(basename(list.files("7.DADA2/filtered", pattern="F_filt.fastq.gz", full.names = TRUE)), "_"), `[`, 1)
+names(derepRs) <- sapply(strsplit(basename(list.files("7.DADA2/filtered", pattern="R_filt.fastq.gz", full.names = TRUE)), "_"), `[`, 1)
+
+```
+
+DADA2 Algorithm Overview
+
+```{r}
+dadaFs <- dada(derepFs, err=errF, multithread=TRUE)
+
+dadaRs <- dada(derepRs, err=errR, multithread=TRUE)
+```
+
+## Merge Pairs and Contruct a Sequence Table 
+
+We can now merge the seqs
+
+```{r}
+mergers <- mergePairs(dadaFs, derepFs, dadaRs, derepRs, verbose=TRUE)
+```
+
+Inspect the merger data.frame from the first sample
+
+```{r}
+head(mergers[[1]])
+```
+
+Now we can construct a sequence table
+
+```{r}
+seqtab <- makeSequenceTable(mergers)
+dim(seqtab)
+```
 
 
+## Cleaning up our Sequence Table 
+
+Inspect distribution of sequence lengths
+
+```{r}
+table(nchar(getSequences(seqtab)))
+```
+
+Now we can get rid of sequences that are within limits as so
+
+```{r}
+ElegentCodes <- "[1, elegant]"
+```
+
+Remove chimeras
+
+```{r}
+seqtab.nochim <- removeBimeraDenovo(seqtab, method="consensus", multithread=7, verbose=TRUE)
+dim(seqtab.nochim)
+```
+
+## Tracking Reads Through the Pipeline
+
+```{r}
+getN <- function(x) sum(getUniques(x))
+track <- cbind(sapply(dadaFs, getN), sapply(dadaRs, getN), sapply(mergers, getN), rowSums(seqtab.nochim))
+colnames(track) <- c("denoisedF", "denoisedR", "merged", "nonchim")
+rownames(track) <- names(dadaFs)
+head(track)
+
+```
 
 
 
