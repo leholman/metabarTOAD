@@ -173,6 +173,8 @@ When using the above two functions the OTUs will be output to the `5.OTUs` folde
 Very often in metabarcoding datasets we see a large number of OTUs with close percentage identity. These may correspond with intraspecfic diversity, unfiltered PCR errors or other methodological foibles. One way to deal with these is to use the LULU algorithm (paper [here](https://www.nature.com/articles/s41467-017-01312-x)). A great tutorial is provided on the GitHub [page](https://github.com/tobiasgf/lulu), but you can just use the below wrapper script if you prefer. 
 
 ```{r}
+library("lulu")
+
 ApplyLulu(seqs="/path/to/OTUs.csv",
           table="/path/to/OTU/by/sample/table.csv",
           output="/path/todesired/output/table/lulu.csv",
