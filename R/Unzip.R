@@ -19,8 +19,11 @@ Unzip <- function(folderwfiles="1.rawreads",unpigzlocation=""){
   files <- list.files(folderwfiles, pattern=".gz", full.names = TRUE)
   if(length(files)==0){stop("No gz files found to unzip, check folder.")}
   message(paste("Unzipping",length(files),"files."))
+  count <- 1
   for (i in 1:length(files)){
     system2(paste(unpigzlocation,"unpigz",sep=""),args=files[i])
+    message(paste0("Unzipping file ",count," of ",length(files)))
+    count <- count + 1
   }
 }
 

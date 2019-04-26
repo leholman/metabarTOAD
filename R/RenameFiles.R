@@ -31,5 +31,6 @@ RenameFiles <- function(SeqIDs,DesiredIDs,folderwfiles="1.rawreads",usemetadataf
     command <-paste("1.rawreads/",currentfile,paste(" 1.rawreads/",as.character(index$RealID[index$RunID==currentfileID]),"_",paste(strsplit(currentfile,"_")[[1]][2:5],collapse ="_"),sep=""),sep="")
     system2('mv',args=command, stdout = NULL,stderr = NULL)
     message(paste0("Renaming file ",count," of ",length(files)))
+    count <- count + 1
   }
 }
