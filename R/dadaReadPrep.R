@@ -68,7 +68,8 @@ dadaReadPrep <- function(PrimerF=NA,
                            folderoutput,"/",loopsample,".R.stripped.fastq.gz ",folderwfiles,"/",
                            fileindex[sampleindex==loopsample],"_L001_R1_001.fastq ",folderwfiles,"/",
                            fileindex[sampleindex==loopsample],"_L001_R2_001.fastq")
-        system2(cutadaptdest,cutadaptarg)
+        log <- system2(cutadaptdest,cutadaptarg,stdout = TRUE,stderr = TRUE)
+        cat(file="log.txt", log , append=T, sep="\n")
       }
     }
     if(!lookforsecondprimer){
@@ -78,7 +79,8 @@ dadaReadPrep <- function(PrimerF=NA,
                               folderoutput,"/",loopsample,".R2.stripped.fastq.gz ",folderwfiles,"/",
                               fileindex[sampleindex==loopsample],"_L001_R1_001.fastq ",folderwfiles,"/",
                               fileindex[sampleindex==loopsample],"_L001_R2_001.fastq")
-        system2(cutadaptdest,cutadaptarg)
+        log <- system2(cutadaptdest,cutadaptarg,stdout = TRUE,stderr = TRUE)
+        cat(file="log.txt", log , append=T, sep="\n")
       }
     }
   }

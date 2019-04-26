@@ -29,6 +29,9 @@ Folders <- function(){
   }else{warning("8.LULU, no need to create")}
   if(!dir.exists("6.mappings/OTUtabs")){dir.create("6.mappings/OTUtabs")
   }else{warning("6.mappings/OTUtabs, no need to create")}
+  if(!file.exists("log.txt")){cat(file="log.txt", "******** metabarTOAD Log ********", sep="\n")
+  						      cat(file="log.txt",date(), sep="\n",append=T)
+  						      cat(file="log.txt", "*********************************", sep="\n",append=T)}
   message("Folders set up.")
 }
 

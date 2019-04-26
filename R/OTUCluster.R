@@ -36,7 +36,8 @@ OTUCluster <- function(UsePrimerFile=FALSE,usearchdest="usearch"){
   for (primer in primers){
     message(paste("Clustering OTUs"))
     OTUarg <- paste("-cluster_otus 4.pooledsamples/",primer,".pooled.ST.QF.fastq -otus 5.OTUs/",primer,".0.97.OTUs.fasta -relabel OTU_",sep="")
-    system2(usearchdest,OTUarg)
+    log <- system2(usearchdest,OTUarg,stdout = TRUE,stderr = TRUE)
+    cat(file="log.txt", log , append=T, sep="\n")
     loopfiles <- sampleindex[primerindex==primer]
     OTUs <- read.fasta(paste("5.OTUs/",primer,".0.97.OTUs.fasta",sep=""))
     results <-data.frame("OTU"=paste("OTU_",1:length(OTUs),sep=""))
@@ -47,9 +48,9 @@ OTUCluster <- function(UsePrimerFile=FALSE,usearchdest="usearch"){
     names(results) <- c("OTU",loopfiles)
     for (loopfile in loopfiles){
       message(paste("Mapping",loopfile,"to OTUs"))
-      #for increased senstivity add "-maxaccepts 8 -maxrejects 256" to the below expression.
-      maparg <- paste("-usearch_global 3.strippedreads/",loopfile,".stripped.fastq -db 5.OTUs/",primer,".0.97.OTUs.fasta -id 0.97 -blast6out 6.mappings/hits.0.97.",primer,".",loopfile,".txt -strand plus -maxhits 1",sep="")
-      system2(usearchdest,maparg)
+      maparg <- paste("-usearch_global 3.strippedreads/",loopfile,".stripped.fastq -db 5.OTUs/",primer,".0.97.OTUs.fasta -id 0.97 -maxaccepts 8 -maxrejects 256 -blast6out 6.mappings/hits.0.97.",primer,".",loopfile,".txt -strand plus -maxhits 1",sep="")
+      log <- system2(usearchdest,maparg,stdout = TRUE,stderr = TRUE)
+      cat(file="log.txt", log , append=T, sep="\n")
       if(file.size(paste("6.mappings/hits.0.97.",primer,".",loopfile,".txt",sep="")) == 0){next}else{
         hits <- read.csv(paste("6.mappings/hits.0.97.",primer,".",loopfile,".txt",sep=""),sep="\t", header=F, stringsAsFactors=F)
         names(hits) <- c("query", "otu", "ident", "length", "mism", "gap", "qstart", "qend", "target_s", "target_e", "e.value", "bitscore")

@@ -43,10 +43,12 @@ PoolNFilterReads <- function(FastqMaxEE=1,
     system2("cat",catoutput)
     qualityarg <- paste("-fastq_filter",paste(folderoutput,"/",primer,".pooled.fastq",sep=""),"--fastq_qmax 42 -fastq_maxee",FastqMaxEE," -fastaout",paste(folderoutput,"/",primer,".pooled.QF.fastq",sep=""),sep=" ")
     message("Filtering out poor quality sequences")
-    system2(vsearchdest, args=qualityarg,stdout = TRUE,stderr = TRUE)
+    log <- system2(vsearchdest, args=qualityarg,stdout = TRUE,stderr = TRUE)
+    cat(file="log.txt", log , append=T, sep="\n")
     singletonsarg <- paste("-derep_fulllength",paste(folderoutput,"/",primer,".pooled.QF.fastq",sep=""),"-sizeout -output",paste(folderoutput,"/",primer,".pooled.ST.QF.fastq",sep=""),sep=" ")
     message("Filtering out singletons")
-    system2(vsearchdest, args=singletonsarg)
+    log <- system2(vsearchdest, args=singletonsarg,stdout = TRUE,stderr = TRUE)
+    cat(file="log.txt", log , append=T, sep="\n")
   }
 }
 

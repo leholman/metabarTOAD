@@ -58,8 +58,10 @@ PrimerStrip <- function(PrimerF=NA,
 
       for (loopsample in sampleindex[primerindex==primer]){
         #this argument needs work
+        message(paste0("Merging ",loopsample))
         cutadaptarg <- paste("-g  ^",loopforward,"...",loopreverse.revcomp," -m ",loopmin," -M ",loopmax," -n 2 -j ",ncores," --discard-untrimmed -o ",folderoutput,"/",loopsample,".stripped.fastq ",folderwfiles,"/",loopsample,".merged.fastq",sep="")
-        system2(cutadaptdest,cutadaptarg)
+        log <- system2(cutadaptdest,cutadaptarg,stdout = TRUE,stderr = TRUE)
+        cat(file="log.txt", log , append=T, sep="\n")
       }
     }
   }
