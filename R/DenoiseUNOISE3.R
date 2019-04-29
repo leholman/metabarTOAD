@@ -28,7 +28,6 @@ DenoiseUNOISE3 <- function(UsePrimerFile=FALSE,usearchdest="usearch"){
     message("Using primer data and metadata file.")
   }
   if(!UsePrimerFile){
-    message(paste("Pooling",length(list.files("3.strippedreads",pattern=".fastq")),"fastq files"))
     sampleindex <- gsub("(^.*).stripped.fastq","\\1",list.files("3.strippedreads",pattern="*.fastq"))
     primerindex <- rep("AllSamples",length(sampleindex))
     primers <- "AllSamples"

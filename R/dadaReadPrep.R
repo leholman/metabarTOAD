@@ -46,11 +46,12 @@ dadaReadPrep <- function(PrimerF=NA,
   }
   if(!UsePrimerFile){
     ##Write some further checks in here for the primers
-    fileindex <- gsub("(^.*)_L001_R1_001.fastq","\\1",list.files(folderwfiles,pattern="L001_R1_001.fastq"))
+    fileindex <- gsub("(^.*)_L001_R1_001.fastq.gz","\\1",list.files(folderwfiles,pattern="L001_R1_001.fastq.gz"))
     sampleindex <- sapply(strsplit(basename(fileindex), "_"), `[`, 1)
     primerindex <- rep("dummyprimer",length(sampleindex))
     primerdata <- data.frame("PrimerPair" = "dummyprimer","F" = PrimerF,"R" = PrimerR)
     primers <- "dummyprimer"
+    dir.create("7.DADA2/trimmed.reads")
   }
 
   for (primer in primers){
