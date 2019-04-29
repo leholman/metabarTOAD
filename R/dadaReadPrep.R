@@ -51,7 +51,7 @@ dadaReadPrep <- function(PrimerF=NA,
     primerindex <- rep("dummyprimer",length(sampleindex))
     primerdata <- data.frame("PrimerPair" = "dummyprimer","F" = PrimerF,"R" = PrimerR)
     primers <- "dummyprimer"
-    dir.create("7.DADA2/trimmed.reads")
+    if (!dir.exists("7.DADA2/trimmed.reads")){dir.create("7.DADA2/trimmed.reads")}
   }
 
   for (primer in primers){
@@ -66,9 +66,9 @@ dadaReadPrep <- function(PrimerF=NA,
         revreadarg <- paste0("^",loopreverse,"...",loopforward.revcomp)
         cutadaptarg <- paste0("-a  ",forreadarg," -A ",revreadarg," -j ",ncores,
                            " --discard-untrimmed -o ",folderoutput,"/",loopsample,".F.stripped.fastq.gz -p ",
-                           folderoutput,"/",loopsample,".R.stripped.fastq.gz ",folderwfiles,"/",
-                           fileindex[sampleindex==loopsample],"_L001_R1_001.fastq ",folderwfiles,"/",
-                           fileindex[sampleindex==loopsample],"_L001_R2_001.fastq")
+                           folderoutput,"/",loopsample,".R.stripped.fastq.gz ",getwd(),"/",folderwfiles,"/",
+                           fileindex[sampleindex==loopsample],"_L001_R1_001.fastq.gz ",getwd(),"/",folderwfiles,"/",
+                           fileindex[sampleindex==loopsample],"_L001_R2_001.fastq.gz")
         log <- system2(cutadaptdest,cutadaptarg,stdout = TRUE,stderr = TRUE)
         cat(file="log.txt", log , append=T, sep="\n")
       }
@@ -77,9 +77,9 @@ dadaReadPrep <- function(PrimerF=NA,
       for (loopsample in sampleindex[primerindex==primer]){
         cutadaptarg <- paste0("-g  ^",loopforward," -G ^",loopreverse," -j ",ncores,
                               " --discard-untrimmed -o ",folderoutput,"/",loopsample,".R1.stripped.fastq.gz -p ",
-                              folderoutput,"/",loopsample,".R2.stripped.fastq.gz ",folderwfiles,"/",
-                              fileindex[sampleindex==loopsample],"_L001_R1_001.fastq ",folderwfiles,"/",
-                              fileindex[sampleindex==loopsample],"_L001_R2_001.fastq")
+                              folderoutput,"/",loopsample,".R2.stripped.fastq.gz ",getwd(),"/",folderwfiles,"/",
+                              fileindex[sampleindex==loopsample],"_L001_R1_001.fastq.gz ",getwd(),"/",folderwfiles,"/",
+                              fileindex[sampleindex==loopsample],"_L001_R2_001.fastq.gz")
         log <- system2(cutadaptdest,cutadaptarg,stdout = TRUE,stderr = TRUE)
         cat(file="log.txt", log , append=T, sep="\n")
       }
