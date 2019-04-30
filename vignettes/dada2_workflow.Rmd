@@ -1,5 +1,5 @@
 ---
-title: "DADA2 Metabarcdoign Workflow"
+title: "DADA2 Metabarcoding Workflow"
 author: "Luke E. Holman"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette

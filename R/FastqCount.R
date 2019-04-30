@@ -13,6 +13,9 @@
 
 FastqCount <- function(file){
   if(length(file)>1){stop("Multiple files handed to counter, use this function for a single file.")}
-  return(as.numeric(system2("awk",args = paste("'{s++}END{print s/4}'",file),stdout=TRUE)))
+  #the below line is sloooooow
+  #return(as.numeric(system2("awk",args = paste("'{s++}END{print s/4}'",file),stdout=TRUE)))
+
+  system2("echo",args = paste0("$(gzcat ",file," | wc -l)/4 | bc"))
   }
 
