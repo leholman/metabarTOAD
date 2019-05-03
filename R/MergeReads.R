@@ -22,8 +22,8 @@ MergeReads <- function(maxdiffs=15,pctID=80,folderwfiles="1.rawreads",folderoutp
   loopcounter <- 1
   for (file in files){
     message(paste("Merging sample ",loopcounter,"/",length(files)," current file: ",gsub('^.*/(.*_S[0-9]+_L001_R1_001.fastq)','\\1',file),sep=""))
-    gsub(folderwfiles,folderoutput,file)
-    output <- gsub('(^.*/.*)_S[0-9]+_L001_R1_001.fastq','\\1.merged.fastq',gsub(folderwfiles,folderoutput,file))
+    gsub(filedestination,folderoutput,file)
+    output <- gsub('(^.*/.*)_S[0-9]+_L001_R1_001.fastq','\\1.merged.fastq',gsub(filedestination,folderoutput,file))
     mergearg <- paste("-fastq_mergepairs",file,"-fastq_maxdiffs",maxdiffs,"-fastq_pctid",pctID,"-fastqout",output)
     log <- system2(usearchdest,args=mergearg,stdout = TRUE,stderr = TRUE)
     cat(file="log.txt", log , append=T, sep="\n")

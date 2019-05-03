@@ -38,7 +38,7 @@ PoolNFilterReads <- function(FastqMaxEE=1,
   }
 
   for (primer in primers){
-    files <- paste(folderwfiles,"/",sampleindex,".stripped.fastq",sep="")
+    files <- paste(folderwfiles,"/",sampleindex[primerindex==primer],".stripped.fastq",sep="")
     catoutput <- paste(paste(files, collapse = " ")," > ",folderoutput,"/",primer,".pooled.fastq",sep="")
     system2("cat",catoutput)
     qualityarg <- paste("-fastq_filter",paste(folderoutput,"/",primer,".pooled.fastq",sep=""),"--fastq_qmax 42 -fastq_maxee",FastqMaxEE," -fastaout",paste(folderoutput,"/",primer,".pooled.QF.fastq",sep=""),sep=" ")
