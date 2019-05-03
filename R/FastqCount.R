@@ -13,8 +13,17 @@
 
 FastqCount <- function(file){
   if(length(file)>1){stop("Multiple files handed to counter, use this function for a single file.")}
-  #the below line is sloooooow
-  #return(as.numeric(system2("awk",args = paste("'{s++}END{print s/4}'",file),stdout=TRUE)))
-  return(system2("echo",args = paste0("$(zcat ",file," | wc -l)/4 | bc")))
+  #first we use some regex to get the file type as defined by the suffix
+  file.type <- gsub(".*[.](.*$)","\\1",file)
+  #then we run two expressions using zcat instead of cat if the file is compressed, each time we output a quater of the total line number
+  if(file.type=="gz"){
+    lines <- system2("echo",args = paste0("$(cat ",file," | zcat | wc -l)"),stdout=TRUE)
+    return(as.numeric(lines)/4)
+  }
+  if(file.type=="fq" | file.type=="fastq"){
+    lines <- system2("echo",args = paste0("$(cat ",file," | wc -l)"),stdout=TRUE)
+    return(as.numeric(lines)/4)
+  }else{message("File type not recognised")}
+
   }
 
