@@ -55,13 +55,14 @@ PrimerStrip <- function(PrimerF=NA,
       loopreverse.revcomp <- c2s(rev(comp(s2c(loopreverse),ambiguous = TRUE)))
       loopmin <- primerdata$minsize[primerdata$PrimerPair==primer]
       loopmax <- primerdata$maxsize[primerdata$PrimerPair==primer]
-
+      loopcounter <- 1
       for (loopsample in sampleindex[primerindex==primer]){
+        message(paste("Stripping primers from sample ",loopcounter,"/",length(sampleindex[primerindex==primer])," current file: ",loopsample,sep=""))
         #this argument needs work
-        message(paste0("Merging ",loopsample))
         cutadaptarg <- paste("-g  ^",loopforward,"...",loopreverse.revcomp," -m ",loopmin," -M ",loopmax," -n 2 -j ",ncores," --discard-untrimmed -o ",folderoutput,"/",loopsample,".stripped.fastq ",folderwfiles,"/",loopsample,".merged.fastq",sep="")
         log <- system2(cutadaptdest,cutadaptarg,stdout = TRUE,stderr = TRUE)
         cat(file="log.txt", log , append=T, sep="\n")
+        loopcounter <- loopcounter+1
       }
     }
   }
