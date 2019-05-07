@@ -38,17 +38,21 @@ PoolNFilterReads <- function(FastqMaxEE=1,
   }
 
   for (primer in primers){
+    message("pooling samples")
     files <- paste(folderwfiles,"/",sampleindex[primerindex==primer],".stripped.fastq",sep="")
     catoutput <- paste(paste(files, collapse = " ")," > ",folderoutput,"/",primer,".pooled.fastq",sep="")
     system2("cat",catoutput)
+    message("Done")
     qualityarg <- paste("-fastq_filter",paste(folderoutput,"/",primer,".pooled.fastq",sep=""),"--fastq_qmax 42 -fastq_maxee",FastqMaxEE," -fastaout",paste(folderoutput,"/",primer,".pooled.QF.fastq",sep=""),sep=" ")
     message("Filtering out poor quality sequences")
     log <- system2(vsearchdest, args=qualityarg,stdout = TRUE,stderr = TRUE)
     cat(file="log.txt", log , append=T, sep="\n")
     singletonsarg <- paste("-derep_fulllength",paste(folderoutput,"/",primer,".pooled.QF.fastq",sep=""),"-sizeout -output",paste(folderoutput,"/",primer,".pooled.ST.QF.fastq",sep=""),sep=" ")
+    message("Done")
     message("Filtering out singletons")
     log <- system2(vsearchdest, args=singletonsarg,stdout = TRUE,stderr = TRUE)
     cat(file="log.txt", log , append=T, sep="\n")
+    message("Done")
   }
 }
 

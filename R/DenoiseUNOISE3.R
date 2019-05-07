@@ -60,9 +60,12 @@ DenoiseUNOISE3 <- function(UsePrimerFile=FALSE,usearchdest="usearch"){
       }
     }
     #Write out raw OTU x sample table UNOISE3
+    message("mapping finished")
     rownames(results) <- results[,1]
     results <- results[,-1]
     write.table(results,file=paste("6.mappings/OTUtabs/",primer,".raw.unoise3.csv",sep=""),sep=",")
+    message("OTU by sample table written.")
+    message("Done")
   }
 }
 

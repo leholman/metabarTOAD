@@ -59,8 +59,11 @@ OTUCluster <- function(UsePrimerFile=FALSE,usearchdest="usearch"){
         }
       }
     }
+    message("mapping finished")
     rownames(results) <- results[,1]
     results <- results[,-1]
     write.table(results,file=paste("6.mappings/OTUtabs/",primer,".raw.0.97.csv",sep=""),sep=",")
+    message("OTU by sample table written.")
+    message("Done")
   }
 }
