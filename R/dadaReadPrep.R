@@ -42,9 +42,10 @@ dadaReadPrep <- function(PrimerF=NA,
     fileindex <- gsub("(^.*)_L001_R1_001.fastq","\\1",list.files(folderwfiles,pattern="L001_R1_001.fastq"))
     fileindex <-  fileindex[match(sapply(strsplit(basename(fileindex), "_"), `[`, 1), sampleindex)]
     dir.create("7.DADA2/trimmed.reads")
-    message("Using primer data and metadata file to trim primers and length truncate.")
+    message("Using primer data and metadata file to trim primers")
   }
   if(!UsePrimerFile){
+    message("Using function supplied primer data to trim primers")
     ##Write some further checks in here for the primers
     fileindex <- gsub("(^.*)_L001_R1_001.fastq.gz","\\1",list.files(folderwfiles,pattern="L001_R1_001.fastq.gz"))
     sampleindex <- sapply(strsplit(basename(fileindex), "_"), `[`, 1)
@@ -59,9 +60,11 @@ dadaReadPrep <- function(PrimerF=NA,
     loopreverse <- gsub("I","N",primerdata$R[primerdata$PrimerPair==primer])
     loopforward.revcomp <- c2s(rev(comp(s2c(loopforward),ambiguous = TRUE)))
     loopreverse.revcomp <- c2s(rev(comp(s2c(loopreverse),ambiguous = TRUE)))
+    count <- 1
 
     if(lookforsecondprimer){
       for (loopsample in sampleindex[primerindex==primer]){
+        message(paste0("Trimming primers from sample ",count," of ",length(sampleindex[primerindex==primer]),":",loopsample))
         forreadarg <- paste0("^",loopforward,"...",loopreverse.revcomp)
         revreadarg <- paste0("^",loopreverse,"...",loopforward.revcomp)
         cutadaptarg <- paste0("-a  ",forreadarg," -A ",revreadarg," -j ",ncores,
@@ -71,10 +74,12 @@ dadaReadPrep <- function(PrimerF=NA,
                            fileindex[sampleindex==loopsample],"_L001_R2_001.fastq.gz")
         log <- system2(cutadaptdest,cutadaptarg,stdout = TRUE,stderr = TRUE)
         cat(file="log.txt", log , append=T, sep="\n")
+        count <- count + 1
       }
     }
     if(!lookforsecondprimer){
       for (loopsample in sampleindex[primerindex==primer]){
+        message(paste0("Trimming primers from sample ",count," of ",length(sampleindex[primerindex==primer]),":",loopsample))
         cutadaptarg <- paste0("-g  ^",loopforward," -G ^",loopreverse," -j ",ncores,
                               " --discard-untrimmed -o ",folderoutput,"/",loopsample,".R1.stripped.fastq.gz -p ",
                               folderoutput,"/",loopsample,".R2.stripped.fastq.gz ",getwd(),"/",folderwfiles,"/",
@@ -82,6 +87,7 @@ dadaReadPrep <- function(PrimerF=NA,
                               fileindex[sampleindex==loopsample],"_L001_R2_001.fastq.gz")
         log <- system2(cutadaptdest,cutadaptarg,stdout = TRUE,stderr = TRUE)
         cat(file="log.txt", log , append=T, sep="\n")
+        count <- count + 1
       }
     }
   }
