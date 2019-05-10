@@ -33,6 +33,7 @@ Folders <- function(){
   						      cat(file="log.txt",date(), sep="\n",append=T)
   						      cat(file="log.txt", "*********************************", sep="\n",append=T)}
   message("Folders set up.")
+  message(":)")
 }
 
 
