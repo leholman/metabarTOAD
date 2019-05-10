@@ -14,3 +14,4 @@ The pipeline has been tested on Mac OS 10.14 onwards and (depending on the funct
 * [DADA2](https://benjjneb.github.io/dada2/dada-installation.html)
 * [LULU](https://github.com/tobiasgf/lulu)
 
+:) 
