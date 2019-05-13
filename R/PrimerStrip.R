@@ -50,6 +50,7 @@ PrimerStrip <- function(PrimerF=NA,
   }
 
     for (primer in primers){
+      if (!primer == "dummyprimer"){message(paste0("Processing ",primer," primer set"))}
       loopforward <- gsub("I","N",primerdata$F[primerdata$PrimerPair==primer])
       loopreverse <- gsub("I","N",primerdata$R[primerdata$PrimerPair==primer])
       loopreverse.revcomp <- c2s(rev(comp(s2c(loopreverse),ambiguous = TRUE)))
