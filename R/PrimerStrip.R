@@ -58,6 +58,7 @@ PrimerStrip <- function(PrimerF=NA,
       loopcounter <- 1
       for (loopsample in sampleindex[primerindex==primer]){
         message(paste("Stripping primers from sample ",loopcounter,"/",length(sampleindex[primerindex==primer])," current file: ",loopsample,sep=""))
+        if(file.info(paste0(folderwfiles,"/",loopsample,".merged.fastq"))$size == 0){next}
         #this argument needs work
         cutadaptarg <- paste("-g  ^",loopforward,"...",loopreverse.revcomp," -m ",loopmin," -M ",loopmax," -n 2 -j ",ncores," --discard-untrimmed -o ",folderoutput,"/",loopsample,".stripped.fastq ",folderwfiles,"/",loopsample,".merged.fastq",sep="")
         log <- system2(cutadaptdest,cutadaptarg,stdout = TRUE,stderr = TRUE)
