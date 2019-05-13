@@ -38,7 +38,8 @@ PoolNFilterReads <- function(FastqMaxEE=1,
   }
 
   for (primer in primers){
-    message("pooling samples")
+   if(!primer=="AllSamples"){message(paste0("Processing ",primer," primers"))}
+    message("Pooling samples")
     files <- paste(folderwfiles,"/",sampleindex[primerindex==primer],".stripped.fastq",sep="")
     catoutput <- paste(paste(files, collapse = " ")," > ",folderoutput,"/",primer,".pooled.fastq",sep="")
     system2("cat",catoutput)
