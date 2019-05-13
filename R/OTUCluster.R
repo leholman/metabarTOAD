@@ -47,6 +47,7 @@ OTUCluster <- function(UsePrimerFile=FALSE,usearchdest="usearch"){
     names(results) <- c("OTU",loopfiles)
     for (loopfile in loopfiles){
       message(paste("Mapping",loopfile,"to OTUs"))
+      if(file.info(paste0("3.strippedreads/",loopfile,".stripped.fastq"))$size == 0){next}
       maparg <- paste("-usearch_global 3.strippedreads/",loopfile,".stripped.fastq -db 5.OTUs/",primer,".0.97.OTUs.fasta -id 0.97 -maxaccepts 8 -maxrejects 256 -blast6out 6.mappings/hits.0.97.",primer,".",loopfile,".txt -strand plus -maxhits 1",sep="")
       log <- system2(usearchdest,maparg,stdout = TRUE,stderr = TRUE)
       cat(file="log.txt", log , append=T, sep="\n")
