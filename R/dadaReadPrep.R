@@ -40,7 +40,7 @@ dadaReadPrep <- function(PrimerF=NA,
     if(length(list.files(folderwfiles,pattern="L001_R1_001.fastq"))!=length(list.files(folderwfiles,pattern="L001_R2_001.fastq"))){stop("Different number of forward and reverse reads, function aborted.")}
     #check the below two lines they feel dicey
     fileindex <- gsub("(^.*)_L001_R1_001.fastq(.gz)?","\\1",list.files(folderwfiles,pattern="L001_R1_001.fastq"))
-    fileindex <-  fileindex[match(sapply(strsplit(basename(fileindex), "_"), `[`, 1), sampleindex)]
+    fileindex <-  fileindex[match(sampleindex,sapply(strsplit(basename(fileindex), "_"), `[`, 1))]
     if (!dir.exists("7.DADA2/trimmed.reads")){dir.create("7.DADA2/trimmed.reads")}
     message("Using primer data and metadata file to trim primers")
   }
