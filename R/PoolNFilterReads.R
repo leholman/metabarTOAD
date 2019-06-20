@@ -31,7 +31,7 @@ PoolNFilterReads <- function(FastqMaxEE=1,
     message("Using primer data and metadata file.")
   }
   if(!UsePrimerFile){
-    message(paste("Pooling",length(list.files(folderwfiles,pattern=".fastq")),"fastq files"))
+    message(paste("Starting process with",length(list.files(folderwfiles,pattern=".fastq")),"fastq files"))
     sampleindex <- gsub("(^.*).stripped.fastq","\\1",list.files(folderwfiles,pattern="*.fastq"))
     primerindex <- rep("AllSamples",length(sampleindex))
     primers <- "AllSamples"
