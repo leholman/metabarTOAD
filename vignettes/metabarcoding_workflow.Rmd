@@ -36,6 +36,11 @@ For this tutorial you will need the following
 
 These should be installed and working on your system. Keep a note of the directory path to the binary or have them in your PATH. Not sure about the PATH? - go [here](http://www.linfo.org/path_env_var.html)
 
+## Workflow Overview
+
+<img src="../images/workflow.png" width=600>
+
+
 
 ## Setting up 
 Make sure you start off with a clean folder in a new working directory. Check there is nothing in your directory with `dir()`. Let's start by loading up the required package(s)

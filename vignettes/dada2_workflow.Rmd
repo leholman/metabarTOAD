@@ -2,11 +2,12 @@
 title: "DADA2 Metabarcoding Workflow"
 author: "Luke E. Holman"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{Vignette Title}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+vignette: |
+  %\VignetteIndexEntry{Vignette Title} %\VignetteEngine{knitr::rmarkdown} %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include = FALSE}
@@ -17,7 +18,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-Many contempory metabarcoding workflows ignore qualty information provided by Illumnia sequencing and in doing so lose the ability to accurately determine lowe frequency sequence diversity.
+Many contemporary metabarcoding workflows ignore quality information provided in FASTQ data, this restricts their ability to accurately resolve low frequency amplicon diversity.
 
 DADA2 is an approach (paper [here](https://benjjneb.github.io/dada2/index.html)) gaining popularity that integrates the quality information to build an model of sequence errors that allowing for very precise inference of amplicon sequences. Here, we show how DADA2 can be implimented in the metabarTOAD wrapper. 
 
@@ -34,6 +35,9 @@ For this tutorial you will need the following
 
 Cutadapt should be installed and working on your system. Keep a note of the directory path to the binary or have them in your PATH. Not sure about the PATH? - go [here](http://www.linfo.org/path_env_var.html)
 
+## Workflow Overview
+
+<img src="../images/dada2workflow.png" width=600>
 
 ## Setting up 
 Make sure you start off with a clean folder in a new working directory. Check there is nothing in your directory with `dir()`. Lets start by loading up the required package(s)
@@ -50,10 +54,10 @@ If you previously used the metabarTOAD workflow to generate 97% OTUs or denoised
 Folders()
 ```
 
-Now we have a folder structure lets move our raw Illumina data into the `1.rawreads`. You might wish to copy your raw files into the `0.backup` folder as well in case you want to start the analysis again from scratch. 
+Now we have a folder structure lets move our raw Illumina data into the `1.rawreads`. If disk space allows you might wish to copy your raw files into the `0.backup` folder as well in case you want to start the analysis again from scratch. 
 
 ## Primer Stripping
-DADA2 requires sequences that have been stripped of primer regions. We can use the below expression to strip primers from both sets fo read pairs at the same time. This is important as many downstream applications (such as DADA2) rely on reads appearing in the same order in both the forward and reverse read files. If we strip reads from read pairs individually we may end up filtering out a single read from a read pair resulting in unmatched pairs in our files. 
+DADA2 requires sequences that have been stripped of primer regions. We can use the below function to strip primers from both sets of read pairs at the same time. This is important as many downstream applications (such as DADA2) rely on reads appearing in the same order in both the forward and reverse read files. If we strip reads from read pairs individually we may end up filtering out a single read from a read pair resulting in unmatched pairs in our files. 
 
 ```{r}
 dadaReadPrep(PrimerF = "YOUR_FORWARD_PRIMER",
@@ -65,7 +69,7 @@ dadaReadPrep(PrimerF = "YOUR_FORWARD_PRIMER",
 
 The function `dadaReadPrep()` will accept ambigous nucleotides in primer data (Y,M,R,N etc.) and will automatically convert inosine (I) bases to N.
 
-You should now find your stripped primers in the directory `/7.DADA2/trimmed.reads/`. Have a look and check as below. 
+You should now find your stripped reads in the directory `/7.DADA2/trimmed.reads/`. Have a look and check as below. 
 
 ```{r}
 list.files("/7.DADA2/trimmed.reads/")
@@ -95,12 +99,9 @@ plotQualityProfile(fnFs[1:2])
 plotQualityProfile(fnRs[1:2])
 ```
 
-INSERT GUIDANCE HERE ON READ QUALITY
-
+As DADA2 uses the quality information in it's algorithm we shouldnt worry too much about poor read quality. Here we should truncate when we see the dip in read quality. It is important to ensure we have an overlap of minimum 30bp for merging the reads later in the pipeline. Make sure you have an understanding of how much of an overlap you have and therefore how much you can truncate both reads by.   
 
 ## Filtering and Error Rate Learning
-
-WHAT ARE OUR REQUIREMENTS FOR THIS STEP?
 
 Next we create objects containing the path for the output files for the next step. 
 
@@ -109,7 +110,7 @@ filtFs <- file.path("7.DADA2/filtered", paste0(sample.names, "_F_filt.fastq.gz")
 filtRs <- file.path("7.DADA2/filtered", paste0(sample.names, "_R_filt.fastq.gz"))
 ```
 
-The next function filters our samples so our dataset contains only low error sequences. You should try to maintain as much of an overlap between your foward and reverse read as possible but avoid including poor qualty data. 
+The next function filters our samples so our dataset contains only low error sequences. Be careful with length truncating genes that have a great deal of length varition (such as ITS). You can change the error using the paramter `maxEE`. A low number is more stingent as we are filtering reads that contain more than the listed number of `Expected Errors`. What are expected errors? [Read Here](https://academic.oup.com/bioinformatics/article/31/21/3476/194979). 
 
 ```{r}
 out <- filterAndTrim(fnFs, filtFs, fnRs, filtRs, truncLen=c(250,180),
@@ -131,11 +132,13 @@ Now we have built a model of the errors we can visualise it as follows.
 plotErrors(errF, nominalQ=TRUE)
 ```
 
-SOMETHING ABOUT JUDGING GOOD FIT
+This diagram details the error rates for each possible base transition (eg. A2G - adenine erronously read as guanine). The black points indiciate the observed transitions in the data and the black line shows the continous error rate that DADA2 has calculated. The red line shows what we would expect if the Illumina Q-Scores were 100% correct, as you can see they rarely are exactly right! 
+
+We judge the goodness-of-fit by looking to chekc the black line and black dots are correlated. Sometimes the error model produces parculiar curves but as long as there is a farily good fit you can use the error rate. If things look drastically wrong consider using the option `nbases= 1e+09` in the `learnErrors()` function to use ten times the number of bases to derive the error model.   
 
 ## Dereplication and DADA2 Algorithm 
 
-DEREPLICATION TEXT HERE
+Next we dereplicate the sequences to produce a list of observed sequences and their abundance for the core DADA2 function. We also name the samples in this object as required by the algorithm.
 
 ```{r}
 derepFs <- derepFastq(list.files("7.DADA2/filtered", pattern="F_filt.fastq.gz", full.names = TRUE), verbose=TRUE)
@@ -146,7 +149,7 @@ names(derepRs) <- sapply(strsplit(basename(list.files("7.DADA2/filtered", patter
 
 ```
 
-DADA2 Algorithm Overview
+Now we implement the core akgotirthm on the forward and revser reads seperately. 
 
 ```{r}
 dadaFs <- dada(derepFs, err=errF, multithread=TRUE)
@@ -156,19 +159,19 @@ dadaRs <- dada(derepRs, err=errR, multithread=TRUE)
 
 ## Merge Pairs and Contruct a Sequence Table 
 
-We can now merge the seqs
+Now we have a our high quality sample by sequence counts we need ot merge the read pairs. We do this as below. 
 
 ```{r}
 mergers <- mergePairs(dadaFs, derepFs, dadaRs, derepRs, verbose=TRUE)
 ```
 
-Inspect the merger data.frame from the first sample
+Inspect the merger data.frame from the first sample. 
 
 ```{r}
 head(mergers[[1]])
 ```
 
-Now we can construct a sequence table
+Now we can construct a sequence table from the merged data.
 
 ```{r}
 seqtab <- makeSequenceTable(mergers)
@@ -178,26 +181,29 @@ dim(seqtab)
 
 ## Cleaning up our Sequence Table 
 
-Inspect distribution of sequence lengths
+Now we can inspect the sequence length distribution of our output data.  
 
 ```{r}
 table(nchar(getSequences(seqtab)))
 ```
 
-Now we can get rid of sequences that are within limits as so
+Looks like there are some very long and short amplicons that are probably erroneous. We can get rid of them as below. Change the numbers as desired for different amplicons.  
 
 ```{r}
-ElegentCodes <- "[1, elegant]"
+seqtab2 <- seqtab[,nchar(colnames(seqtab)) %in% 303:323]
 ```
 
-Remove chimeras
+We should also check for chimeric sequences. We can do this as below. 
 
 ```{r}
-seqtab.nochim <- removeBimeraDenovo(seqtab, method="consensus", multithread=7, verbose=TRUE)
+seqtab.nochim <- removeBimeraDenovo(seqtab2, method="consensus", multithread=7, verbose=TRUE)
 dim(seqtab.nochim)
 ```
 
 ## Tracking Reads Through the Pipeline
+
+We can check reads throguh our pipeline as below. 
+
 
 ```{r}
 getN <- function(x) sum(getUniques(x))

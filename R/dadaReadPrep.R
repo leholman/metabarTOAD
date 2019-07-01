@@ -64,7 +64,7 @@ dadaReadPrep <- function(PrimerF=NA,
 
     if(lookforsecondprimer){
       for (loopsample in sampleindex[primerindex==primer]){
-        message(paste0("Trimming primers from sample ",count," of ",length(sampleindex[primerindex==primer])," : ",loopsample))
+        message(paste0("Trimming primers from sample ",count," of ",length(sampleindex[primerindex==primer])," Sample Name: ",loopsample))
         forreadarg <- paste0("^",loopforward,"...",loopreverse.revcomp)
         revreadarg <- paste0("^",loopreverse,"...",loopforward.revcomp)
         cutadaptarg <- paste0("-a  ",forreadarg," -A ",revreadarg," -j ",ncores,
