@@ -79,7 +79,7 @@ dadaReadPrep <- function(PrimerF=NA,
     }
     if(!lookforsecondprimer){
       for (loopsample in sampleindex[primerindex==primer]){
-        message(paste0("Trimming primers from sample ",count," of ",length(sampleindex[primerindex==primer]),":",loopsample))
+        message(paste0("Trimming primers from sample ",count," of ",length(sampleindex[primerindex==primer])," Sample Name:",loopsample))
         cutadaptarg <- paste0("-g  ^",loopforward," -G ^",loopreverse," -j ",ncores,
                               " --discard-untrimmed -o ",folderoutput,"/",loopsample,".R1.stripped.fastq.gz -p ",
                               folderoutput,"/",loopsample,".R2.stripped.fastq.gz ",getwd(),"/",folderwfiles,"/",
