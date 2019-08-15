@@ -27,7 +27,8 @@ library("metabarTOAD")
 You can read an overview of the pipeline using the [UPARSE/UNOISE](http://www.drive5.com/uparse/) algorithm [here](https://github.com/leholman/metabarTOAD/tree/master/vignettes/workflowdada2.pdf), and [DADA2](https://benjjneb.github.io/dada2/index.html) [here](https://github.com/leholman/metabarTOAD/tree/master/vignettes/UPARSEworkflow.pdf).
 
 ## Workflow Diagrams
-#### UPARSE/UNOISE
+#### UPARSE/UNOISE 
 <img src="images/workflow.png" width=600>
-#### DADA2
+
+#### DADA2 
 <img src="images/dada2workflow.png" width=600>
