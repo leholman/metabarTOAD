@@ -39,7 +39,7 @@ ParseTaxonomy <- function(pctThreshold=97,
 
   #Step 1 clean raw data of unwanted assignments
   message("Parsing high quality assignments")
-  data2 <- data[-grep("uncultured | environmental | construct",data$sscinames),]
+  data2 <- data[-grep("uncultured | Uncultured | environmental | environmental | construct | clone",data$sscinames),]
 
   ##Step 2 Subset for only high conf assignments
   data3 <- data2[-grep("sp\\.",data2$sscinames),]
