@@ -40,9 +40,9 @@ ParseTaxonomy <- function(pctThreshold=97,
   ## pct Threashold should be 50-100 and bigger than lwrpctThreshold
 
   if (!all(names(data)==c("OTUID","qlen","slen","qcov","qcovhsp","sseqid","bitscore","score","evalue","pctid","qstart","qend","start","send","staxid","sscinames"))){
-    names(data) <- c("OTUID_lol","qlen","slen","qcov","qcovhsp","sseqid","bitscore","score","evalue","pctid","qstart","qend","start","send","staxid","sscinames")
+    data <- fread(blastoutput,sep="\t",header=F)
+    names(data) <- c("OTUID","qlen","slen","qcov","qcovhsp","sseqid","bitscore","score","evalue","pctid","qstart","qend","start","send","staxid","sscinames")
   }
-
 
   #Step 1 clean raw data of unwanted assignments
   message("Parsing high quality assignments")
