@@ -34,10 +34,15 @@ ParseTaxonomy <- function(pctThreshold=97,
   assignmentResults <- data.frame("OTU"=as.character(unique(data$OTUID)),"assignmentQual"=rep(NA,length(as.character(unique(data$OTUID)))),"taxID"=rep(NA,length(as.character(unique(data$OTUID)))))
   message("Done")
   #Data checks to go in here
-  ## Data must have qcov pctid bitscore staxid OTUID
+
   ## lineages most have OTU Kingdom -> Species
   ## All staxid must be in lineages
   ## pct Threashold should be 50-100 and bigger than lwrpctThreshold
+
+  if (!all(names(data)==c("OTUID","qlen","slen","qcov","qcovhsp","sseqid","bitscore","score","evalue","pctid","qstart","qend","start","send","staxid","sscinames"))){
+    names(data) <- c("OTUID_lol","qlen","slen","qcov","qcovhsp","sseqid","bitscore","score","evalue","pctid","qstart","qend","start","send","staxid","sscinames")
+  }
+
 
   #Step 1 clean raw data of unwanted assignments
   message("Parsing high quality assignments")
