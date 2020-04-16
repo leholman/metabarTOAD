@@ -108,9 +108,15 @@ ParseTaxonomy <- function(pctThreshold=97,
 
 
   ## Use linages to pull out Kingdom -> Species for HQ and Low confidence hits
+  #the below line was used in place of the if else ladder below in previous versions
+  #taxIds <- c(unlist(strsplit(nums[grep(";",nums)],";")),nums[-grep(";",nums)],unique(Hits1.2$staxid[-grep(";",Hits1.2$staxid)]))
+
   nums <- assignmentResults$taxID
   nums <- nums[-grep("None",nums)]
-  taxIds <- c(unlist(strsplit(nums[grep(";",nums)],";")),nums[-grep(";",nums)],unique(Hits1.2$staxid[-grep(";",Hits1.2$staxid)]))
+  if (length(grep(";",nums))>0 & length(Hits1.2$staxid[grep(";",Hits1.2$staxid)])>0) {taxIds <- c(unlist(strsplit(nums[grep(";",nums)],";")),nums[-grep(";",nums)],unique(Hits1.2$staxid[-grep(";",Hits1.2$staxid)]))
+  } else if (length(Hits1.2$staxid[grep(";",Hits1.2$staxid)])>0) {taxIds <- c(nums,unique(Hits1.2$staxid[-grep(";",Hits1.2$staxid)]))
+  } else if (length(grep(";",nums))>0) {taxIds <- c(unlist(strsplit(nums[grep(";",nums)],";")),nums[-grep(";",nums)],unique(Hits1.2$staxid))
+  } else {taxIds <- c(nums,unique(Hits1.2$staxid))}
   taxIds <- unique(taxIds)
   #taxIds <-c(as.numeric(assignmentResults$taxID[-grep(";",assignmentResults$taxID)]),unlist(strsplit(assignmentResults$taxID[grep(";",assignmentResults$taxID)],";")))
   #smolLineages <- lineages[lineages$tax_id %in% as.numeric(assignmentResults$taxID),]
