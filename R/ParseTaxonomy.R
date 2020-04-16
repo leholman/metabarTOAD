@@ -31,7 +31,6 @@ ParseTaxonomy <- function(pctThreshold=97,
   message("Reading in data")
   data <- fread(blastoutput,sep="\t",header=T)
   lineages <- fread(lineages,header=T)
-  assignmentResults <- data.frame("OTU"=as.character(unique(data$OTUID)),"assignmentQual"=rep(NA,length(as.character(unique(data$OTUID)))),"taxID"=rep(NA,length(as.character(unique(data$OTUID)))))
   message("Done")
   #Data checks to go in here
 
@@ -43,6 +42,8 @@ ParseTaxonomy <- function(pctThreshold=97,
     data <- fread(blastoutput,sep="\t",header=F)
     names(data) <- c("OTUID","qlen","slen","qcov","qcovhsp","sseqid","bitscore","score","evalue","pctid","qstart","qend","start","send","staxid","sscinames")
   }
+  assignmentResults <- data.frame("OTU"=as.character(unique(data$OTUID)),"assignmentQual"=rep(NA,length(as.character(unique(data$OTUID)))),"taxID"=rep(NA,length(as.character(unique(data$OTUID)))))
+
 
   #Step 1 clean raw data of unwanted assignments
   message("Parsing high quality assignments")
