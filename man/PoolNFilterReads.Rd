@@ -4,9 +4,13 @@
 \alias{PoolNFilterReads}
 \title{PoolNFilterReads}
 \usage{
-PoolNFilterReads(FastqMaxEE = 1, folderwfiles = "3.strippedreads",
-  folderoutput = "4.pooledsamples", UsePrimerFile = FALSE,
-  vsearchdest = "vsearch")
+PoolNFilterReads(
+  FastqMaxEE = 1,
+  folderwfiles = "3.strippedreads",
+  folderoutput = "4.pooledsamples",
+  UsePrimerFile = FALSE,
+  vsearchdest = "vsearch"
+)
 }
 \arguments{
 \item{FastqMaxEE}{Maximum expected error of pooled sequences}

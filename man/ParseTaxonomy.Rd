@@ -4,12 +4,20 @@
 \alias{ParseTaxonomy}
 \title{ParseTaxonomy}
 \usage{
-ParseTaxonomy(pctThreshold = 97, lwrpctThreshold = 85,
-  lwrcovpct = 65, blastoutput = NA, lineages = NA,
-  returntable = TRUE)
+ParseTaxonomy(
+  pctThreshold = 97,
+  covpct = 90,
+  lwrpctThreshold = 85,
+  lwrcovpct = 65,
+  blastoutput = NA,
+  lineages = NA,
+  returntable = TRUE
+)
 }
 \arguments{
 \item{pctThreshold}{Percent identity match threashold for high quality assignments, 97-100 depending on marker}
+
+\item{covpct}{Percent coverage of hit to be considered high quality}
 
 \item{lwrpctThreshold}{Percent identity match threshold under which a hit is not considered}
 

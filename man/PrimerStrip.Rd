@@ -4,10 +4,17 @@
 \alias{PrimerStrip}
 \title{PrimerStrip}
 \usage{
-PrimerStrip(PrimerF = NA, PrimerR = NA, MinLen = NA, MaxLen = NA,
-  UsePrimerFile = FALSE, folderwfiles = "2.mergedreads",
-  folderoutput = "3.strippedreads", cutadaptdest = "cutadapt",
-  ncores = 1)
+PrimerStrip(
+  PrimerF = NA,
+  PrimerR = NA,
+  MinLen = NA,
+  MaxLen = NA,
+  UsePrimerFile = FALSE,
+  folderwfiles = "2.mergedreads",
+  folderoutput = "3.strippedreads",
+  cutadaptdest = "cutadapt",
+  ncores = 1
+)
 }
 \arguments{
 \item{PrimerF}{The 5-3 sequence of the forward primer. Ambiguous sequences are accepted (eg.N).}

@@ -4,8 +4,12 @@
 \alias{RenameFiles}
 \title{RenameFiles}
 \usage{
-RenameFiles(SeqIDs, DesiredIDs, folderwfiles = "1.rawreads",
-  usemetadatafile = FALSE)
+RenameFiles(
+  SeqIDs,
+  DesiredIDs,
+  folderwfiles = "1.rawreads",
+  usemetadatafile = FALSE
+)
 }
 \arguments{
 \item{SeqIDs}{A vector containing the filenames of the files to be renamed.}

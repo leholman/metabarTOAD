@@ -4,9 +4,16 @@
 \alias{dadaReadPrep}
 \title{dadaReadPrep}
 \usage{
-dadaReadPrep(PrimerF = NA, PrimerR = NA, UsePrimerFile = FALSE,
-  folderwfiles = "1.rawreads", folderoutput = "7.DADA2/trimmed.reads",
-  lookforsecondprimer = FALSE, cutadaptdest = "cutadapt", ncores = 1)
+dadaReadPrep(
+  PrimerF = NA,
+  PrimerR = NA,
+  UsePrimerFile = FALSE,
+  folderwfiles = "1.rawreads",
+  folderoutput = "7.DADA2/trimmed.reads",
+  lookforsecondprimer = FALSE,
+  cutadaptdest = "cutadapt",
+  ncores = 1
+)
 }
 \arguments{
 \item{PrimerF}{Sequence of the forward primer}

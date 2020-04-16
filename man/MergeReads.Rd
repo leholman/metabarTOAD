@@ -4,8 +4,13 @@
 \alias{MergeReads}
 \title{MergeReads}
 \usage{
-MergeReads(maxdiffs = 15, pctID = 80, folderwfiles = "1.rawreads",
-  folderoutput = "2.mergedreads", usearchdest = "usearch")
+MergeReads(
+  maxdiffs = 15,
+  pctID = 80,
+  folderwfiles = "1.rawreads",
+  folderoutput = "2.mergedreads",
+  usearchdest = "usearch"
+)
 }
 \arguments{
 \item{maxdiffs}{Maximum number of allowed mismatches in the alignment between reads. Increase with greater overlap of forward and reverse sequences.}

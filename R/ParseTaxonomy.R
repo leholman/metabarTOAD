@@ -5,6 +5,7 @@
 #'
 #'
 #'@param pctThreshold Percent identity match threashold for high quality assignments, 97-100 depending on marker
+#'@param covpct Percent coverage of hit to be considered high quality
 #'@param lwrpctThreshold Percent identity match threshold under which a hit is not considered
 #'@param lwrcovpct Percent coverage of hit under which a hit is not considered
 #'@param blastoutput The full directory to a text file with output from the BLAST standalone executable
@@ -18,6 +19,7 @@
 
 
 ParseTaxonomy <- function(pctThreshold=97,
+                          covpct=90,
                           lwrpctThreshold=85,
                           lwrcovpct=65,
                           blastoutput=NA,
@@ -43,7 +45,7 @@ ParseTaxonomy <- function(pctThreshold=97,
 
   ##Step 2 Subset for only high conf assignments
   data3 <- data2[-grep("sp\\.",data2$sscinames),]
-  HCdata <- data3[data3$pctid > pctThreshold & data3$qcov > 90,]
+  HCdata <- data3[data3$pctid > pctThreshold & data3$qcov > covpct,]
 
 
   #function to return the number of unique taxa hits per OTU within the high confidence limits
@@ -64,7 +66,7 @@ ParseTaxonomy <- function(pctThreshold=97,
   HQassigns <- as.character(assignmentResults$OTU[assignmentResults$assignmentQual=="High"])
   HQassigns <- HQassigns[!is.na(HQassigns)]
 
-  HCdata2 <- data2[data2$pctid > pctThreshold & data2$qcov > 90,]
+  HCdata2 <- data2[data2$pctid > pctThreshold & data2$qcov > covpct,]
 
   hits.dist2 <- lapply(unique(as.character(HCdata2$OTUID)),numHits)
   hitmismatches2 <- data.frame("OTU"=unique(as.character(HCdata2$OTUID)),"hits"=unlist(hits.dist2))
