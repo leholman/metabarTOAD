@@ -17,7 +17,7 @@
 #'@export
 
 
-ApplyLulu <- function(seqs,table,output,vsearchdest="vsearch"){
+ApplyLulu <- function(seqs,table,output,vsearchdest="vsearch",minimum.match=98){
   if(!grepl(".csv",output)){stop("Supplied output is not a .csv file. specify .csv at the end of the file")}
   if(!file.exists("8.LULU")){stop("8.LULU folder not found, please create a folder named 8.LULU in the working directory.")}
   vsearcharg <- paste("--usearch_global ", seqs, " --db ",seqs," --self --id .84 --iddef 1 --userout 8.LULU/",gsub(".*/(.*).csv","\\1",output),".match_list.txt -userfields query+target+id --maxaccepts 0 --query_cov .9 --maxhits 10",sep="")
@@ -28,7 +28,7 @@ ApplyLulu <- function(seqs,table,output,vsearchdest="vsearch"){
   #extra step here to get rid of all zero rows in the OTU tab
   row_sub = apply(rawtable, 1, function(row) all(row ==0 ))
   rawtable <-rawtable[!row_sub,]
-  curatedresults <- lulu(rawtable,OTUselfhits)
+  curatedresults <- lulu(rawtable,OTUselfhits,minimum_match=minimum.match)
   curatedtable <- curatedresults$curated_table
   write.table(curatedtable,output,sep=",")
   ##LULU makes a log file - think of a way to move or get rid of this.
