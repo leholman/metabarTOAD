@@ -72,7 +72,7 @@ ParseTaxonomy <- function(pctThreshold=97,
   HQassigns <- as.character(assignmentResults$OTU[assignmentResults$assignmentQual=="High"])
   HQassigns <- HQassigns[!is.na(HQassigns)]
 
-  HCdata2 <- data2[data2$pctid > pctThreshold & data2$qcov > covpct,]
+  HCdata2 <- data2[data2$pctid > pctThreshold & data2$qcov > covpct & data2$qcovhsp > covpct,]
 
   hits.dist2 <- lapply(unique(as.character(HCdata2$OTUID)),numHits)
   hitmismatches2 <- data.frame("OTU"=unique(as.character(HCdata2$OTUID)),"hits"=unlist(hits.dist2))
