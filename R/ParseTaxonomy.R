@@ -51,7 +51,7 @@ ParseTaxonomy <- function(pctThreshold=97,
 
   ##Step 2 Subset for only high conf assignments
   data3 <- data2[-grep("sp\\.",data2$sscinames),]
-  HCdata <- data3[data3$pctid > pctThreshold & data3$qcov > covpct,]
+  HCdata <- data3[data3$pctid > pctThreshold & data3$qcov > covpct & data3$qcovhsp > covpct,]
 
 
   #function to return the number of unique taxa hits per OTU within the high confidence limits
