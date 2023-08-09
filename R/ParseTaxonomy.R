@@ -47,8 +47,12 @@ ParseTaxonomy <- function(pctThreshold=97,
 
   #Step 1 clean raw data of unwanted assignments
   message("Parsing high quality assignments")
-  data2 <- data[-grep("uncultured | Uncultured | environmental | environmental | construct | clone",data$sscinames),]
-
+  
+  if (length(grep("uncultured | Uncultured | environmental | environmental | construct | clone",data$sscinames))>0){
+    data2 <- data[-grep("uncultured | Uncultured | environmental | environmental | construct | clone",data$sscinames),]
+  } else {data2 <- data }
+  
+  
   ##Step 2 Subset for only high conf assignments
   data3 <- data2[-grep("sp\\.",data2$sscinames),]
   HCdata <- data3[data3$pctid > pctThreshold & data3$qcov > covpct & data3$qcovhsp > covpct,]
